@@ -1,6 +1,27 @@
 services:
+  backend_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    container_name: docker_backend
+    restart: unless-stopped
+    depends_on:
+      pg:
+        condition: service_healthy
+    env_file:
+      - ".env"
+    networks:
+      - local
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 40s
   pg:
-    image: postgres
+    image: postgres:16-alpine
     environment:
       POSTGRES_DB: crm
       POSTGRES_USER: postgres
@@ -9,6 +30,14 @@ services:
       - "5432:5432"
     volumes:
       - pg-data:/var/lib/postgresql/data
+    networks:
+      - local
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d crm"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
 
   redis_container:
@@ -55,5 +84,7 @@ volumes:
   rabbitmq-data:
   pg-data:
 
-
+networks:
+  local:
+    driver: bridge
 

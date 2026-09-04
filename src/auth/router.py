@@ -5,15 +5,17 @@ from fastapi import APIRouter, status, HTTPException
 from fastapi.security import HTTPBearer
 
 from sqlalchemy import select, UUID
-from app.database import SessionDep
-from app.models.auth import TokenBlacklist
-from app.schemas.user import UserCreateSchema, UserResponseSchema, UserLoginSchema, RefreshTokenRequest
-from app.models.user import User
-from app.security import jwt_password, jwt_utils
-from app.services.auth_service import create_token_pair
+
+from src.auth.schemas import RefreshTokenResponse
+from src.database import SessionDep
+from src.auth.models import TokenBlacklist
+from src.users.schemas import UserCreateSchema, UserResponseSchema, UserLoginSchema, RefreshTokenRequest
+from src.users.models import User
+from src.security import jwt_password, jwt_utils
+from src.services.auth_service import create_token_pair, create_access_token
 from fastapi.params import Depends
 
-from app.utils.rate_limiter import rate_limit_ok, rate_limit_login
+from src.utils.rate_limiter import rate_limit_ok, rate_limit_login
 
 http_bearer = HTTPBearer(auto_error=False)
 
@@ -113,3 +115,37 @@ async def logout(session: SessionDep,
 
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Logout failed: {e}")
+
+@router.post("/refresh")
+async def refresh_access_token(session: SessionDep,
+                               refresh_token: RefreshTokenRequest):
+
+    try:
+        payload = jwt_utils.decode_jwt(refresh_token.refresh_token)
+
+        if payload.get("type") != "refresh":
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="invalid token type"
+            )
+
+        user_uuid = UUID(payload.get("sub"))
+        result = await session.execute(select(User).where(User.user_uuid == user_uuid))
+        user = result.scalars().first()
+
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="user not found",
+            )
+
+        user_response = UserResponseSchema.model_validate(user)
+        new_access_token = create_access_token(user_response)
+
+        return RefreshTokenResponse(access_token=new_access_token)
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=str(e),
+        )

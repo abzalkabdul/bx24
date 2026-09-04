@@ -4,13 +4,8 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from app.database import Base
-from app.config import Settings
-from app.models.user import User
-from app.models.task import Task
-from app.models.deal import Deal
-from app.models.contact import Contact
-
+from src.database import Base
+from src.config import Settings
 
 config = context.config
 

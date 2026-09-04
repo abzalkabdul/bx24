@@ -1,13 +1,12 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy import select, update, delete
-from fastapi.security import HTTPBearer
 
 from uuid import UUID
 
-from app.auth.router import http_bearer
-from app.database import SessionDep
-from app.models.user import User
-from app.schemas.user import UserCreateSchema, UserCreateResponse
+from src.auth.router import http_bearer
+from src.database import SessionDep
+from src.users.models import User
+from src.users.schemas import UserCreateSchema, UserCreateResponse
 
 router = APIRouter(prefix="/users",
                    tags=["RBD"],

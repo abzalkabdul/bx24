@@ -1,6 +1,6 @@
 import jwt
 from datetime import timedelta, datetime
-from app.config import settings
+from src.config import settings
 
 
 def encode_jwt(

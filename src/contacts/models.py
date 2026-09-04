@@ -2,7 +2,7 @@ from typing import Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.database import Base, uuid_pk, str_50, str_64
+from src.database import Base, uuid_pk, str_50, str_64
 
 class Contact(Base):
     __tablename__ = "contacts"

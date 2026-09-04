@@ -2,10 +2,10 @@ from datetime import datetime
 import uuid
 from datetime import UTC, timedelta
 
-from app.schemas.auth import TokenResponseSchema
-from app.schemas.user import UserResponseSchema
-from app.config import settings
-from app.security import jwt_utils
+from src.auth.schemas import TokenResponseSchema
+from src.users.schemas import UserResponseSchema
+from src.config import settings
+from src.security import jwt_utils
 
 
 TOKEN_TYPE_FIELD = "type"

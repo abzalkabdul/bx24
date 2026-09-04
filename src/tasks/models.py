@@ -3,7 +3,7 @@ from typing import Optional
 
 from sqlalchemy import Text, DateTime, ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped
-from app.database import Base, uuid_fk, uuid_pk, str_50
+from src.database import Base, uuid_fk, uuid_pk, str_50
 
 
 class Task(Base):

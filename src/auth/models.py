@@ -2,7 +2,7 @@ from datetime import datetime
 from sqlalchemy import String, ForeignKey, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.database import Base, str_64, str_256, uuid_fk
+from src.database import Base, str_64, str_256, uuid_fk
 
 class TokenBlacklist(Base):
     __tablename__ = "revoked_tokens"

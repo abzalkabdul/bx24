@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
-from app.database import Base, uuid_fk, uuid_pk,str_50
-from app.models.enum import Status
+from src.database import Base, uuid_fk, uuid_pk,str_50
+from src.deals.enum import Status
 
 
 class Deal(Base):

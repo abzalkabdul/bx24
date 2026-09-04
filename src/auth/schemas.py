@@ -5,3 +5,6 @@ class TokenResponseSchema(BaseModel):
     refresh_token: str
     token_type: str = "Bearer"
     user_data: dict
+
+class RefreshTokenResponse(BaseModel):
+    access_token: str

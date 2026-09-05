@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from sqlalchemy import ForeignKey, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column
@@ -11,7 +12,7 @@ class Comments(Base):
 
     comment_uuid: Mapped[uuid_pk]
     body: Mapped[str] = mapped_column(nullable=False)
-    contact_uuid: Mapped[uuid_fk] = mapped_column(ForeignKey("contacts.contact_uuid", nullable=True))
-    deal_uuid: Mapped[uuid_fk] = mapped_column(ForeignKey("deals.deal_uuid"), nullable=True)
-    author: Mapped[uuid_fk] = mapped_column(ForeignKey("users.user_uuid"))
+    contact_uuid: Mapped[Optional[uuid_fk]] = mapped_column(ForeignKey("contacts.contact_uuid"), nullable=True)
+    deal_uuid: Mapped[Optional[uuid_fk]] = mapped_column(ForeignKey("deals.deal_uuid"), nullable=True)
+    author: Mapped[Optional[uuid_fk]] = mapped_column(ForeignKey("users.user_uuid"))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

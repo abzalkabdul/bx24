@@ -4,7 +4,7 @@ from src.database import Base, uuid_fk, uuid_pk,str_50
 from src.deals.enum import Status
 
 
-class Deal(Base):
+class Deals(Base):
     __tablename__ = "deals"
 
     deal_uuid: Mapped[uuid_pk]

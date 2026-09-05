@@ -6,7 +6,7 @@ from sqlalchemy.orm import mapped_column, Mapped
 from src.database import Base, uuid_fk, uuid_pk, str_50
 
 
-class Task(Base):
+class Tasks(Base):
     __tablename__ = "tasks"
 
     task_uuid: Mapped[uuid_pk]

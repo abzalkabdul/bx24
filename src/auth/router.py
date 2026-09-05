@@ -10,7 +10,7 @@ from src.auth.schemas import RefreshTokenResponse
 from src.database import SessionDep
 from src.auth.models import TokenBlacklist
 from src.users.schemas import UserCreateSchema, UserResponseSchema, UserLoginSchema, RefreshTokenRequest
-from src.users.models import User
+from src.users.models import Users
 from src.security import jwt_password, jwt_utils
 from src.services.auth_service import create_token_pair, create_access_token
 from fastapi.params import Depends
@@ -38,7 +38,7 @@ async def validate_user(
         detail="invalid email or password",
     )
 
-    res = await session.execute(select(User).where(User.email == login_data.email))
+    res = await session.execute(select(Users).where(Users.email == login_data.email))
     user = res.scalars().first()
 
     if not user:
@@ -59,7 +59,7 @@ async def sign_up(
     user_data: UserCreateSchema,
 ):
 
-    result = await session.execute(select(User).where(User.email == user_data.email))
+    result = await session.execute(select(Users).where(Users.email == user_data.email))
     existing_email = result.scalars().first()
 
     if existing_email:
@@ -68,7 +68,7 @@ async def sign_up(
 
     hashed_password = jwt_password.hash_password(user_data.password)
 
-    new_user = User(
+    new_user = Users(
         username=user_data.username,
         email=user_data.email,
         password=hashed_password,
@@ -130,7 +130,7 @@ async def refresh_access_token(session: SessionDep,
             )
 
         user_uuid = UUID(payload.get("sub"))
-        result = await session.execute(select(User).where(User.user_uuid == user_uuid))
+        result = await session.execute(select(Users).where(Users.user_uuid == user_uuid))
         user = result.scalars().first()
 
         if not user:

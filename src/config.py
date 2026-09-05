@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     POSTGRES_PORT: str
     POSTGRES_DB: str
 
+    TOKEN: str
+
     @property
     def db_url(self):
         return "postgresql+asyncpg://{}:{}@{}:{}/{}".format(

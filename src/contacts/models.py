@@ -4,7 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from src.database import Base, uuid_pk, str_50, str_64
 
-class Contact(Base):
+class Contacts(Base):
     __tablename__ = "contacts"
 
     contact_uuid: Mapped[uuid_pk]

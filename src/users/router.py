@@ -5,23 +5,23 @@ from uuid import UUID
 
 from src.auth.router import http_bearer
 from src.database import SessionDep
-from src.users.models import User
+from src.users.models import Users
 from src.users.schemas import UserCreateSchema, UserCreateResponse
 
 router = APIRouter(prefix="/users",
-                   tags=["RBD"],
+                   tags=["Users"],
                    dependencies=[Depends(http_bearer)],
                    )
 
 @router.get("/")
 async def get_users(session: SessionDep):
-    query = await session.execute(select(User))
+    query = await session.execute(select(Users))
     users = query.scalars().all()
     return users
 
 @router.get("/{id}")
 async def get_user(user_uuid: UUID, session: SessionDep):
-    result = await session.execute(select(User).where(User.user_uuid == user_uuid))
+    result = await session.execute(select(Users).where(Users.user_uuid == user_uuid))
     user = result.scalars().first()
     return user
 
@@ -29,7 +29,7 @@ async def get_user(user_uuid: UUID, session: SessionDep):
 async def create_user(session: SessionDep,
                       user_data: UserCreateSchema) -> UserCreateResponse:
 
-    new_user = User(**user_data.model_dump())
+    new_user = Users(**user_data.model_dump())
     session.add(new_user)
     await session.commit()
 
@@ -38,8 +38,8 @@ async def create_user(session: SessionDep,
 
 @router.patch("/update_username")
 async def update_user(user_uuid: UUID, username: str, session: SessionDep):
-    await session.execute(update(User)
-                          .where(User.user_uuid == user_uuid)
+    await session.execute(update(Users)
+                          .where(Users.user_uuid == user_uuid)
                           .values(username=username))
 
     await session.commit()
@@ -48,6 +48,6 @@ async def update_user(user_uuid: UUID, username: str, session: SessionDep):
 
 @router.delete("/{id}")
 async def delete_user(user_uuid: UUID, session: SessionDep):
-    await session.execute(delete(User).where(User.user_uuid == user_uuid))
+    await session.execute(delete(Users).where(Users.user_uuid == user_uuid))
     await session.commit()
     return {"status": "success"}

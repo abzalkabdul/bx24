@@ -5,6 +5,17 @@ from sqlalchemy import pool
 
 from alembic import context
 from src.database import Base
+
+from src.users.models import Users
+from src.contacts.models import Contacts
+from src.deals.models import Deals
+from src.pipeline_stages.models import PipelineStages
+from src.tasks.models import Tasks
+from src.comments.models import Comments
+from src.notifications.models import Notifications
+from src.tg_sessions.models import TgSessions
+from src.auth.models import TokenBlacklist
+
 from src.config import Settings
 
 config = context.config

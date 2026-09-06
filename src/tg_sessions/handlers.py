@@ -8,6 +8,7 @@ router = Router()
 
 class Reg(StatesGroup):
     name: State()
+    number: State()
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
